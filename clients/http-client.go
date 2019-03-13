@@ -14,6 +14,9 @@ func Get(request models.HttpRequest) (*http.Response,error) {
 func execute(requestType string, request models.HttpRequest) (*http.Response, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(requestType, request.Path, request.Body)
+	setDefaultHeaders(req)
+	setCustomHeaders(request.Headers, req)
+	setQueryParams(request.QueryParams, req)
 
 	if err != nil {
 		log.Println(err)

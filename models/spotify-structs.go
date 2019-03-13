@@ -64,6 +64,70 @@ type Paging struct {
 	Href     *string `json:"href"`
 }
 
+type RecommendationResponse struct {
+	Seeds  []SeedRecommendations `json:"seeds"`
+	Tracks []TracksFull          `json:"tracks"`
+}
+
+type RecommendationRequest struct {
+	Limit                  int
+	Market                 *string
+	SeedArtists            []string
+	SeedGenres             []string
+	SeedTracks             []string
+	MinAcousticness        float32
+	MaxAcousticness        float32
+	TargetAcousticness     float32
+	MinDanceability        float32
+	MaxDanceability        float32
+	TargetDanceability     float32
+	MinDurationMs          int
+	MaxDurationMs          int
+	TargetDurationMs       int
+	MinEnergy              float32
+	MaxEnergy              float32
+	TargetEnergy           float32
+	MinInstrumentalness    float32
+	MaxInstrumentalness    float32
+	TargetInstrumentalness float32
+	MinKey                 int
+	MaxKey                 int
+	TargetKey              int
+	MinLiveness            float32
+	MaxLiveness            float32
+	TargetLiveness         float32
+	MinLoudness            float32
+	MaxLoudness            float32
+	TargetLoudness         float32
+	MinMode                int
+	MaxMode                int
+	TargetMode             int
+	MinPopularity          int
+	MaxPopularity          int
+	TargetPopularity       int
+	MinSpeechiness         float32
+	MaxSpeechiness         float32
+	TargetSpeechiness      float32
+	MinTempo               float32
+	MaxTempo               float32
+	TargetTempo            float32
+	MinTimeSignature       int
+	MaxTimeSignature       int
+	TargetTimeSignature    int
+	MinValence             float32
+	MaxValence             float32
+	TargetValence          float32
+}
+
+type SeedRecommendations struct {
+	AfterFilteringSize int     `json:"afterFilteringSize"`
+	AfterRelinkingSize int     `json:"afterRelinkingSize"`
+	Href               *string `json:"href"`
+	ID                 *string `json:"id"`
+	InitialPoolSize    int     `json:"initialPoolSize"`
+	Type               *string `json:"type"`
+}
+
 type TracksFull struct {
 	Album            AlbumSimplified     `json:"album"`
 	Artists          []ArtistsSimplified `json:"artists"`

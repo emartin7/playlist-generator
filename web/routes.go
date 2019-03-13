@@ -10,6 +10,7 @@ import (
 func GetRoutes() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/user-history", userHistoryHandler).Methods("POST")
+	router.HandleFunc("/recommendations", recommendationHandler).Methods("POST")
 	router.Use(loggingMiddleware)
 
 	return router

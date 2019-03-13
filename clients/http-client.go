@@ -40,7 +40,7 @@ func setCustomHeaders(headerMap map[string]string, request *http.Request) {
 func setQueryParams(queryParamMap map[string]string, request *http.Request) {
 	if queryParamMap != nil {
 		for key, value := range queryParamMap {
-			if value != "" {
+			if value != "" && value != "0" {
 				q := request.URL.Query()
 				q.Add(key, value)
 				request.URL.RawQuery = q.Encode()

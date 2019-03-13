@@ -39,3 +39,19 @@ func UnmarshalToTracksPaging(responseBody io.ReadCloser) (*models.TracksPaging, 
 	}
 	return &tracksPaging, nil
 }
+
+func UnmarshalToRecommendationsResponse(responseBody io.ReadCloser) (*models.RecommendationResponse, error) {
+	defer responseBody.Close()
+
+	bodyBytes, bytesError := ioutil.ReadAll(responseBody)
+	if bytesError != nil {
+		return nil, &errors.UnmarshalError{Err: bytesError.Error()}
+	}
+
+	var recommendationResponse models.RecommendationResponse
+	err := json.Unmarshal(bodyBytes, &recommendationResponse)
+	if err != nil {
+		return nil, &errors.UnmarshalError{Err: err.Error()}
+	}
+	return &recommendationResponse, nil
+}

@@ -53,6 +53,42 @@ func userHistoryHandler(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(bytesOut)
 }
 
+func recommendationHandler(writer http.ResponseWriter, request *http.Request) {
+	bodyBytes, bytesError := ioutil.ReadAll(request.Body)
+	if bytesError != nil {
+		handleError(&errors.UnmarshalError{Err: bytesError.Error()}, writer)
+		return
+	}
+
+	var config models.RecommendationRequest
+	unmarshallingError := json.Unmarshal(bodyBytes, &config)
+	if unmarshallingError != nil {
+		handleError(&errors.UnmarshalError{Err: unmarshallingError.Error()}, writer)
+		return
+	}
+
+	// userHistoryRequestValidationError := models.ValidateUserHistoryRequest(config)
+	// if userHistoryRequestValidationError != nil {
+	// 	handleError(userHistoryRequestValidationError, writer)
+	// 	return
+	// }
+
+	recommendationResponse, requestError := web.GetRecommendations(config)
+
+	if requestError != nil {
+		handleError(requestError, writer)
+		return
+	}
+
+	bytesOut, marshallingError := json.Marshal(recommendationResponse)
+	if requestError != nil {
+		handleError(marshallingError, writer)
+		return
+	}
+
+	writer.Write(bytesOut)
+}
+
 func handleError(err error, writer http.ResponseWriter) {
 	log.Println(err.Error())
 

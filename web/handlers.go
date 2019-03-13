@@ -1,13 +1,13 @@
 package web
 
 import (
-	web "playlist-generator/web/actors"
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"playlist-generator/errors"
 	"playlist-generator/models"
+	web "playlist-generator/web/actors"
 )
 
 func userHistoryHandler(writer http.ResponseWriter, request *http.Request) {
@@ -30,7 +30,15 @@ func userHistoryHandler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	user, requestError := web.GetUserHistory(config)
+	var requestError error
+	var user models.PagingType
+
+	if config.TypeOfSearch == "tracks" {
+		user, requestError = web.GetUserHistoryTracks(config)
+	} else {
+		user, requestError = web.GetUserHistoryArtists(config)
+	}
+
 	if requestError != nil {
 		handleError(requestError, writer)
 		return

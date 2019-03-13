@@ -65,20 +65,20 @@ type Paging struct {
 }
 
 type TracksFull struct {
-	Album            AlbumSimplified   `json:"album"`
-	Artists          ArtistsSimplified `json:"artists"`
-	AvailableMarkets []string          `json:"available_markets"`
-	DurationMs       int               `json:"duration_ms"`
-	Explicit         bool              `json:"explicit"`
-	ExternalUrls     ExternalUrls      `json:"external_urls"`
-	Href             *string           `json:"href"`
-	ID               *string           `json:"id"`
-	IsPlayable       bool              `json:"is_playable"`
-	Name             *string           `json:"name"`
-	Popularity       int               `json:"popularity"`
-	Previewurl       *string           `json:"preview_url"`
-	Type             *string           `json:"type"`
-	URI              *string           `json:"uri"`
+	Album            AlbumSimplified     `json:"album"`
+	Artists          []ArtistsSimplified `json:"artists"`
+	AvailableMarkets []string            `json:"available_markets"`
+	DurationMs       int                 `json:"duration_ms"`
+	Explicit         bool                `json:"explicit"`
+	ExternalUrls     ExternalUrls        `json:"external_urls"`
+	Href             *string             `json:"href"`
+	ID               *string             `json:"id"`
+	IsPlayable       bool                `json:"is_playable"`
+	Name             *string             `json:"name"`
+	Popularity       int                 `json:"popularity"`
+	Previewurl       *string             `json:"preview_url"`
+	Type             *string             `json:"type"`
+	URI              *string             `json:"uri"`
 }
 
 type TracksPaging struct {

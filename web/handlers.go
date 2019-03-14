@@ -2,27 +2,26 @@ package web
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"playlist-generator/errors"
+	io "playlist-generator/io"
 	"playlist-generator/models"
 	web "playlist-generator/web/actors"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 func userHistoryHandler(writer http.ResponseWriter, request *http.Request) {
-	bodyBytes, bytesError := ioutil.ReadAll(request.Body)
-	if bytesError != nil {
-		handleError(&errors.UnmarshalError{Err: bytesError.Error()}, writer)
+	var config = models.UserHistoryRequest{}
+	genericConfig, err := io.UnmarshalGenericFunction(request.Body, config)
+
+	if err != nil {
+		handleError(err, writer)
 		return
 	}
 
-	var config models.UserHistoryRequest
-	unmarshallingError := json.Unmarshal(bodyBytes, &config)
-	if unmarshallingError != nil {
-		handleError(&errors.UnmarshalError{Err: unmarshallingError.Error()}, writer)
-		return
-	}
+	mapstructure.Decode(genericConfig, &config)
 
 	userHistoryRequestValidationError := models.ValidateUserHistoryRequest(config)
 	if userHistoryRequestValidationError != nil {
@@ -54,18 +53,15 @@ func userHistoryHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func recommendationHandler(writer http.ResponseWriter, request *http.Request) {
-	bodyBytes, bytesError := ioutil.ReadAll(request.Body)
-	if bytesError != nil {
-		handleError(&errors.UnmarshalError{Err: bytesError.Error()}, writer)
+	var config = models.RecommendationRequest{}
+	genericConfig, err := io.UnmarshalGenericFunction(request.Body, config)
+
+	if err != nil {
+		handleError(err, writer)
 		return
 	}
 
-	var config models.RecommendationRequest
-	unmarshallingError := json.Unmarshal(bodyBytes, &config)
-	if unmarshallingError != nil {
-		handleError(&errors.UnmarshalError{Err: unmarshallingError.Error()}, writer)
-		return
-	}
+	mapstructure.Decode(genericConfig, &config)
 
 	// userHistoryRequestValidationError := models.ValidateUserHistoryRequest(config)
 	// if userHistoryRequestValidationError != nil {

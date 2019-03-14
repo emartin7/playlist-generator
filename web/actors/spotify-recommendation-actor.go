@@ -1,6 +1,7 @@
 package web
 
 import (
+	"github.com/mitchellh/mapstructure"
 	"net/http"
 	"playlist-generator/clients"
 	"playlist-generator/errors"
@@ -12,7 +13,7 @@ import (
 
 const recommendationPath = "/v1/recommendations"
 
-func GetRecommendations(config models.RecommendationRequest) (*models.RecommendationResponse, error) {
+func GetRecommendations(config models.RecommendationRequest) (recommendationResponse *models.RecommendationResponse, err error) {
 	resp, err := clients.Get(models.HttpRequest{
 		QueryParams: map[string]string{
 			"limit":                   strconv.Itoa(config.Limit),
@@ -73,7 +74,9 @@ func GetRecommendations(config models.RecommendationRequest) (*models.Recommenda
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		return io.UnmarshalToRecommendationsResponse(resp.Body)
+		genericResp, err := io.UnmarshalGenericFunction(resp.Body, models.TracksPaging{})
+		mapstructure.Decode(genericResp, &recommendationResponse)
+		return recommendationResponse, err
 	}
 	return nil, &errors.HttpError{StatusCode: resp.StatusCode, Err: resp.Status}
 }

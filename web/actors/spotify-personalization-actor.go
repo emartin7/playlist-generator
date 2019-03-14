@@ -1,6 +1,7 @@
 package web
 
 import (
+	"github.com/mitchellh/mapstructure"
 	"net/http"
 	"playlist-generator/clients"
 	"playlist-generator/errors"
@@ -12,28 +13,32 @@ import (
 const spotifyBaseAddress = "https://api.spotify.com"
 const userHistoryPath = "/v1/me/top/"
 
-func GetUserHistoryArtists(config models.UserHistoryRequest) (*models.ArtistsPaging, error) {
+func GetUserHistoryArtists(config models.UserHistoryRequest) (artists *models.ArtistsPaging, err error) {
 	resp, err := getUserHistory(config)
 
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		return io.UnmarshalToArtistsPaging(resp.Body)
+		genericResp, err := io.UnmarshalGenericFunction(resp.Body, models.ArtistsPaging{})
+		mapstructure.Decode(genericResp, &artists)
+		return artists, err
 	}
 	return nil, &errors.HttpError{StatusCode: resp.StatusCode, Err: resp.Status}
 }
 
-func GetUserHistoryTracks(config models.UserHistoryRequest) (*models.TracksPaging, error) {
+func GetUserHistoryTracks(config models.UserHistoryRequest) (tracks *models.TracksPaging, err error) {
 	resp, err := getUserHistory(config)
 
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		return io.UnmarshalToTracksPaging(resp.Body)
+		genericResp, err := io.UnmarshalGenericFunction(resp.Body, models.TracksPaging{})
+		mapstructure.Decode(genericResp, &tracks)
+		return tracks, err
 	}
 	return nil, &errors.HttpError{StatusCode: resp.StatusCode, Err: resp.Status}
 }

@@ -10,7 +10,7 @@ type UserHistoryRequest struct {
 	OauthToken   string `json:"oauthToken"`
 }
 
-func ValidateUserHistoryRequest(request UserHistoryRequest) *errors.ValidationError {
+func ValidateUserHistoryRequest(request UserHistoryRequest) (err *errors.ValidationError) {
 	errorSlice := []string{}
 	if request.TypeOfSearch == "" {
 		errorSlice = append(errorSlice, "TypeOfSearch was empty")
@@ -25,11 +25,10 @@ func ValidateUserHistoryRequest(request UserHistoryRequest) *errors.ValidationEr
 		errorSlice = append(errorSlice, "OauthToken was empty")
 	}
 	if len(errorSlice) != 0 {
-		validationError := errors.ValidationError{
+		err = &errors.ValidationError{
 			Err:                "UserHistoryRequest_Validation_Error",
 			ProblemDiscriptors: errorSlice,
 		}
-		return &validationError
 	}
-	return nil
+	return
 }

@@ -1,11 +1,8 @@
 package models
 
 type RecommendationRequest struct {
-	Limit                  int      `json:"limit"`
+	RecommendationLimit    int      `json:"recommendation_limit"`
 	Market                 *string  `json:"market"`
-	SeedArtists            []string `json:"seed_artists"`
-	SeedGenres             []string `json:"seed_genres"`
-	SeedTracks             []string `json:"seed_tracks"`
 	MinAcousticness        float64  `json:"min_acousticness"`
 	MaxAcousticness        float64  `json:"max_acousticness"`
 	TargetAcousticness     float64  `json:"target_acousticness"`
@@ -48,5 +45,19 @@ type RecommendationRequest struct {
 	MinValence             float64  `json:"min_valence"`
 	MaxValence             float64  `json:"max_valence"`
 	TargetValence          float64  `json:"target_valence"`
+	UseUserHistory         bool     `json:"use_user_history"`
+	TypeOfSearch           string   `json:"typeOfSearch"`
+	TimeRange              string   `json:"timeRange"`
+	Offset                 int      `json:"offset"`
+	Limit                  int      `json:"limit"`
 	OauthToken             string   `json:"oauthToken"`
+	SeedArtists            []string `json:"seed_artists"`
+	SeedGenres             []string `json:"seed_genres"`
+	SeedTracks             []string `json:"seed_tracks"`
+}
+
+type Seeds struct {
+	SeedArtists []string `json:"seed_artists"`
+	SeedGenres  []string `json:"seed_genres"`
+	SeedTracks  []string `json:"seed_tracks"`
 }

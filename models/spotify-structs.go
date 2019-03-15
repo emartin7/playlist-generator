@@ -35,7 +35,7 @@ type ArtistsFull struct {
 type ArtistsSimplified struct {
 	Href         *string      `json:"href"`
 	ExternalUrls ExternalUrls `json:"external_urls"`
-	ID           *string      `json:"id"`
+	ID           string       `json:"id"`
 	Name         *string      `json:"name"`
 	Type         *string      `json:"type"`
 	URI          *string      `json:"uri"`
@@ -86,7 +86,7 @@ type TracksFull struct {
 	Explicit         bool                `json:"explicit"`
 	ExternalUrls     ExternalUrls        `json:"external_urls"`
 	Href             *string             `json:"href"`
-	ID               *string             `json:"id"`
+	ID               string              `json:"id"`
 	IsPlayable       bool                `json:"is_playable"`
 	Name             *string             `json:"name"`
 	Popularity       int                 `json:"popularity"`

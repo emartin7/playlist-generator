@@ -3,14 +3,15 @@ package web
 import (
 	"log"
 	"net/http"
+	web "playlist-generator/web/handlers"
 
 	"github.com/gorilla/mux"
 )
 
 func GetRoutes() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/user-history", userHistoryHandler).Methods("POST")
-	router.HandleFunc("/recommendations", recommendationHandler).Methods("POST")
+	router.HandleFunc("/user-history", web.UserHistoryHandler).Methods("POST")
+	router.HandleFunc("/recommendations", web.RecommendationHandler).Methods("POST")
 	router.Use(loggingMiddleware)
 
 	return router

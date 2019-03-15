@@ -1,6 +1,7 @@
 package web
 
 import (
+	"log"
 	"github.com/mitchellh/mapstructure"
 	"net/http"
 	"playlist-generator/clients"
@@ -36,9 +37,11 @@ func GetUserHistoryTracks(config models.UserHistoryRequest) (tracks *models.Trac
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		genericResp, err := io.UnmarshalGenericFunction(resp.Body, models.TracksPaging{})
-		mapstructure.Decode(genericResp, &tracks)
-		return tracks, err
+		tracksContainer := models.TracksPaging{}
+		genericResp, err := io.UnmarshalGenericFunction(resp.Body, tracksContainer)
+		log.Println(genericResp)
+		mapstructure.Decode(genericResp, &tracksContainer)
+		return &tracksContainer, err
 	}
 	return nil, &errors.HttpError{StatusCode: resp.StatusCode, Err: resp.Status}
 }

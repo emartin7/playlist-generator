@@ -1,14 +1,14 @@
 package web
 
 import (
-	"log"
-	"github.com/mitchellh/mapstructure"
 	"net/http"
 	"playlist-generator/clients"
 	"playlist-generator/errors"
 	"playlist-generator/io"
 	"playlist-generator/models"
 	"strconv"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 const spotifyBaseAddress = "https://api.spotify.com"
@@ -22,9 +22,10 @@ func GetUserHistoryArtists(config models.UserHistoryRequest) (artists *models.Ar
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		genericResp, err := io.UnmarshalGenericFunction(resp.Body, models.ArtistsPaging{})
-		mapstructure.Decode(genericResp, &artists)
-		return artists, err
+		artistsContainer := models.ArtistsPaging{}
+		genericResp, err := io.UnmarshalGenericFunction(resp.Body, artistsContainer)
+		mapstructure.Decode(genericResp, &artistsContainer)
+		return &artistsContainer, err
 	}
 	return nil, &errors.HttpError{StatusCode: resp.StatusCode, Err: resp.Status}
 }
@@ -39,7 +40,6 @@ func GetUserHistoryTracks(config models.UserHistoryRequest) (tracks *models.Trac
 	if resp.StatusCode == http.StatusOK {
 		tracksContainer := models.TracksPaging{}
 		genericResp, err := io.UnmarshalGenericFunction(resp.Body, tracksContainer)
-		log.Println(genericResp)
 		mapstructure.Decode(genericResp, &tracksContainer)
 		return &tracksContainer, err
 	}

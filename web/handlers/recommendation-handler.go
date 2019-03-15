@@ -3,7 +3,6 @@ package web
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"math/rand"
 	"net/http"
 	io "playlist-generator/io"
@@ -34,13 +33,14 @@ func RecommendationHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	recommendationResponse, err := web.GetRecommendations(recommendationRequest)
+	tracks, err := getTracksFromRecommendation(recommendationResponse)
 
 	if err != nil {
 		handleError(err, writer)
 		return
 	}
 
-	bytesOut, err := json.Marshal(recommendationResponse)
+	bytesOut, err := json.Marshal(tracks)
 	if err != nil {
 		handleError(err, writer)
 		return
@@ -52,13 +52,11 @@ func RecommendationHandler(writer http.ResponseWriter, request *http.Request) {
 func getUserHistory(config models.UserHistoryRequest) (user models.PagingType, err error) {
 	// err = models.ValidateUserHistoryRequest(config)
 	if err != nil {
-		log.Println("in the error statement")
 		return
 	}
 
 	if config.TypeOfSearch == "tracks" {
 		user, err = web.GetUserHistoryTracks(config)
-		log.Println(user)
 	} else {
 		user, err = web.GetUserHistoryArtists(config)
 	}
@@ -81,8 +79,9 @@ func seedRecommendationObjectFromHistory(userHistory models.PagingType, recommen
 	return recommendationRequest, err
 }
 
-func getSeedsFromArtists(artists *models.ArtistsPaging) (seeds *models.Seeds, err error) {
-	var artistSlice []string
+func getSeedsFromArtists(artists *models.ArtistsPaging) (*models.Seeds, error) {
+	seeds := models.Seeds{}
+	artistSlice := []string{}
 	if len(artists.Items) < 1 {
 		return nil, errors.New("Invalid Request: no history to search from")
 	}
@@ -92,18 +91,18 @@ func getSeedsFromArtists(artists *models.ArtistsPaging) (seeds *models.Seeds, er
 
 	if len(artistSlice) < 5 {
 		seeds.SeedArtists = artistSlice
-		return
+		return &seeds, nil
 	}
 
 	for i := 0; i < 5; i++ {
 		seeds.SeedArtists = append(seeds.SeedArtists, artistSlice[rand.Intn(len(artistSlice)-1)])
 	}
-	return
+	return &seeds, nil
 }
 
-func getSeedsFromTracks(tracks *models.TracksPaging) (seeds *models.Seeds, err error) {
-	log.Println(tracks)
-	var tracksSlice []string
+func getSeedsFromTracks(tracks *models.TracksPaging) (*models.Seeds, error) {
+	seedLiteral := models.Seeds{}
+	tracksSlice := []string{}
 	if len(tracks.Items) < 1 {
 		return nil, errors.New("Invalid Request: no history to search from")
 	}
@@ -112,14 +111,14 @@ func getSeedsFromTracks(tracks *models.TracksPaging) (seeds *models.Seeds, err e
 	}
 
 	if len(tracksSlice) < 5 {
-		seeds.SeedTracks = tracksSlice
-		return
+		seedLiteral.SeedTracks = tracksSlice
+		return &seedLiteral, nil
 	}
 
 	for i := 0; i < 5; i++ {
-		seeds.SeedTracks = append(seeds.SeedTracks, tracksSlice[rand.Intn(len(tracksSlice)-1)])
+		seedLiteral.SeedTracks = append(seedLiteral.SeedTracks, tracksSlice[rand.Intn(len(tracksSlice)-1)])
 	}
-	return
+	return &seedLiteral, nil
 }
 
 func useHistoryToGetSeeds(recommendationRequest models.RecommendationRequest) (recommendation models.RecommendationRequest, err error) {
@@ -132,10 +131,21 @@ func useHistoryToGetSeeds(recommendationRequest models.RecommendationRequest) (r
 	}
 
 	userHistory, err := getUserHistory(userHistoryRequest)
-	log.Println(err)
 	if err != nil {
 		return
 	}
 
 	return seedRecommendationObjectFromHistory(userHistory, recommendationRequest)
+}
+
+func getTracksFromRecommendation(recommendationResponse *models.RecommendationResponse) (models.ClientRecommendationResponse, error) {
+	clientRecommendationResponse := models.ClientRecommendationResponse{}
+	trackSlice := []string{}
+
+	for i := 0; i < len(recommendationResponse.Tracks); i++ {
+		trackSlice = append(trackSlice, recommendationResponse.Tracks[i].URI)
+	}
+
+	clientRecommendationResponse.Tracks = trackSlice
+	return clientRecommendationResponse, nil
 }

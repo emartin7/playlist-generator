@@ -20,7 +20,7 @@ type AlbumSimplified struct {
 }
 
 type ArtistsPaging struct {
-	Items []ArtistsFull `json:"items"`
+	Items []ArtistsSimplified `json:"items"`
 	*Paging
 }
 
@@ -92,7 +92,7 @@ type TracksFull struct {
 	Popularity       int                 `json:"popularity"`
 	Previewurl       *string             `json:"preview_url"`
 	Type             *string             `json:"type"`
-	URI              *string             `json:"uri"`
+	URI              string              `json:"uri"`
 }
 
 type TracksPaging struct {

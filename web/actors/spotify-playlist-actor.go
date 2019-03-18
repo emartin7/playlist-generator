@@ -17,7 +17,7 @@ import (
 var playlistCreatePath = "/v1/users/~/playlists"
 var playlistAppendTrackPath = "/v1/playlists/~/tracks"
 
-func CreatePlaylist(playlist models.SpotifyPlaylist, user models.SpotifyUser, oauthToken string) (playlist *models.SpotifyPlaylist, err error) {
+func CreatePlaylist(playlist models.SpotifyPlaylist, user models.SpotifyUser, oauthToken string) (*models.SpotifyPlaylist, error) {
 	playlistBytes, _ := json.Marshal(playlist)
 	resp, err := clients.Post(models.HttpRequest{
 		Headers: map[string]string{
@@ -28,7 +28,7 @@ func CreatePlaylist(playlist models.SpotifyPlaylist, user models.SpotifyUser, oa
 	})
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	if resp.StatusCode == http.StatusOK {
@@ -42,11 +42,12 @@ func CreatePlaylist(playlist models.SpotifyPlaylist, user models.SpotifyUser, oa
 
 func AppendTracksToPlaylist(playlist models.SpotifyPlaylist, tracks models.RecommendationResponse, oauthToken string) (ok bool, err error) {
 	trackBytes, _ := json.Marshal(tracks)
+	dereferencedID := *playlist.ID
 	resp, err := clients.Post(models.HttpRequest{
 		Headers: map[string]string{
 			"Authorization": "Bearer " + oauthToken,
 		},
-		Path: spotifyBaseAddress + strings.Replace(playlistAppendTrackPath, "~", playlist.ID, 1),
+		Path: spotifyBaseAddress + strings.Replace(playlistAppendTrackPath, "~", dereferencedID, 1),
 		Body: ioutil.NopCloser(bytes.NewReader(trackBytes)),
 	})
 

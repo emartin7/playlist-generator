@@ -1,12 +1,13 @@
 package web
 
 import (
-	"github.com/mitchellh/mapstructure"
 	"net/http"
 	"playlist-generator/clients"
 	"playlist-generator/errors"
 	"playlist-generator/io"
 	"playlist-generator/models"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 const profilePath = "/v1/recommendations"

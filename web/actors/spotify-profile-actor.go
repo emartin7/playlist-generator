@@ -24,7 +24,7 @@ func GetProfile(oauthToken string) (spotifyUser *models.SpotifyUser, err error) 
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		genericResp, err := io.UnmarshalGenericFunction(resp.Body, models.TracksPaging{})
+		genericResp, err := io.UnmarshalGenericFunction(resp.Body, models.SpotifyUser{})
 		mapstructure.Decode(genericResp, &spotifyUser)
 		return spotifyUser, err
 	}

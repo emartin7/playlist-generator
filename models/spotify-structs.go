@@ -78,6 +78,13 @@ type SeedRecommendations struct {
 	Type               *string `json:"type"`
 }
 
+type SpotifyPlaylist struct {
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Public      bool    `json:"public"`
+	ID          *string `json:"id"`
+}
+
 type SpotifyUser struct {
 	ID   string  `json:"id"`
 	Type *string `json:"type"`

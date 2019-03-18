@@ -11,6 +11,11 @@ func Get(request models.HttpRequest) (*http.Response, error) {
 	return execute(requestType, request)
 }
 
+func Post(request models.HttpRequest) (*http.Response, error) {
+	requestType := "POST"
+	return execute(requestType, request)
+}
+
 func execute(requestType string, request models.HttpRequest) (*http.Response, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(requestType, request.Path, request.Body)

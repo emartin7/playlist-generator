@@ -1,7 +1,6 @@
 package web
 
 import (
-	"github.com/mitchellh/mapstructure"
 	"net/http"
 	"playlist-generator/clients"
 	"playlist-generator/errors"
@@ -9,6 +8,8 @@ import (
 	"playlist-generator/models"
 	"strconv"
 	"strings"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 const recommendationPath = "/v1/recommendations"

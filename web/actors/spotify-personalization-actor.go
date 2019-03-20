@@ -11,7 +11,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-const spotifyBaseAddress = "https://api.spotify.com"
+const SpotifyBaseAddress = "https://api.spotify.com"
 const userHistoryPath = "/v1/me/top/"
 
 func GetUserHistoryArtists(config models.UserHistoryRequest) (artists *models.ArtistsPaging, err error) {
@@ -56,7 +56,7 @@ func getUserHistory(config models.UserHistoryRequest) (*http.Response, error) {
 		Headers: map[string]string{
 			"Authorization": "Bearer " + config.OauthToken,
 		},
-		Path: spotifyBaseAddress + userHistoryPath + config.TypeOfSearch,
+		Path: SpotifyBaseAddress + userHistoryPath + config.TypeOfSearch,
 	})
 
 	if err != nil {

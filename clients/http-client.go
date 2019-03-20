@@ -21,7 +21,7 @@ func execute(requestType string, request models.HttpRequest) (*http.Response, er
 	req, err := http.NewRequest(requestType, request.Path, request.Body)
 	setDefaultHeaders(req)
 	setCustomHeaders(request.Headers, req)
-	setQueryParams(request.QueryParams, req)
+	SetQueryParams(request.QueryParams, req)
 
 	if err != nil {
 		log.Println(err)
@@ -42,7 +42,7 @@ func setCustomHeaders(headerMap map[string]string, request *http.Request) {
 	}
 }
 
-func setQueryParams(queryParamMap map[string]string, request *http.Request) {
+func SetQueryParams(queryParamMap map[string]string, request *http.Request) {
 	if queryParamMap != nil {
 		for key, value := range queryParamMap {
 			if value != "" && value != "0" {
@@ -52,4 +52,12 @@ func setQueryParams(queryParamMap map[string]string, request *http.Request) {
 			}
 		}
 	}
+}
+
+func GetFullRequest(requestType string, request models.HttpRequest) (*http.Request, error) {
+	req, err := http.NewRequest(requestType, request.Path, request.Body)
+	setDefaultHeaders(req)
+	setCustomHeaders(request.Headers, req)
+	SetQueryParams(request.QueryParams, req)
+	return req, err
 }

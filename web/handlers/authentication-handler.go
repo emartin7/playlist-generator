@@ -1,51 +1,20 @@
 package web
 
 import (
-	"encoding/json"
+	"log"
 	"net/http"
-	io "playlist-generator/io"
-	"playlist-generator/models"
-	web "playlist-generator/web/actors"
-
-	"github.com/mitchellh/mapstructure"
+	actors "playlist-generator/web/actors"
 )
 
+const clientId = "96f6ab889f904ec49f7e4e8bf04db1e8"
+const authorizedPath = "/authorize"
+
 func AuthenticationHandler(writer http.ResponseWriter, request *http.Request) {
-	var config = models.UserHistoryRequest{}
-	genericConfig, err := io.UnmarshalGenericFunction(request.Body, config)
+	req, _ := actors.GetAuthorizedUserRequest(request)
+	log.Println(req.URL.RawQuery)
+	http.Redirect(writer, req, "https://accounts.spotify.com/authorize?"+req.URL.RawQuery, 302)
+}
 
-	if err != nil {
-		handleError(err, writer)
-		return
-	}
-
-	mapstructure.Decode(genericConfig, &config)
-
-	userHistoryRequestValidationError := models.ValidateUserHistoryRequest(config)
-	if userHistoryRequestValidationError != nil {
-		handleError(userHistoryRequestValidationError, writer)
-		return
-	}
-
-	var requestError error
-	var user models.PagingType
-
-	if config.TypeOfSearch == "tracks" {
-		user, requestError = web.GetUserHistoryTracks(config)
-	} else {
-		user, requestError = web.GetUserHistoryArtists(config)
-	}
-
-	if requestError != nil {
-		handleError(requestError, writer)
-		return
-	}
-
-	bytesOut, marshallingError := json.Marshal(user)
-	if requestError != nil {
-		handleError(marshallingError, writer)
-		return
-	}
-
-	writer.Write(bytesOut)
+func AuthenticationRedirectHandler(writer http.ResponseWriter, request *http.Request) {
+	log.Println("Got Here")
 }

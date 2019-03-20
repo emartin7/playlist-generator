@@ -17,7 +17,7 @@ func GetProfile(oauthToken string) (spotifyUser *models.SpotifyUser, err error) 
 		Headers: map[string]string{
 			"Authorization": "Bearer " + oauthToken,
 		},
-		Path: spotifyBaseAddress + profilePath,
+		Path: SpotifyBaseAddress + profilePath,
 	})
 
 	if err != nil {

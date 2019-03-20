@@ -67,7 +67,7 @@ func GetRecommendations(config models.RecommendationRequest) (recommendationResp
 		Headers: map[string]string{
 			"Authorization": "Bearer " + config.OauthToken,
 		},
-		Path: spotifyBaseAddress + recommendationPath,
+		Path: SpotifyBaseAddress + recommendationPath,
 	})
 
 	if err != nil {

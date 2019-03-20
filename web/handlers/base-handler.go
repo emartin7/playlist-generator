@@ -27,7 +27,7 @@ func handleError(err error, writer http.ResponseWriter) {
 		case 400:
 			http.Error(writer, `{ "message: BadRequest" }`, http.StatusBadRequest)
 		case 401:
-			http.Error(writer, `{ "message: NotAuthorized" }`, http.StatusUnauthorized)
+			http.Error(writer, `{ "message: Unauthorized" }`, http.StatusUnauthorized)
 		default:
 			http.Error(writer, `{ "message: ServiceUnavailable" }`, http.StatusServiceUnavailable)
 		}

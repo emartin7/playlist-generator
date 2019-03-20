@@ -18,7 +18,8 @@ func GetRoutes() *mux.Router {
 	user.Use(authenticationMiddleware)
 
 	auth := router.PathPrefix("/api/playlist-generator/").Subrouter()
-	auth.HandleFunc("/auth", web.UserHistoryHandler).Methods("POST")
+	auth.HandleFunc("/auth", web.AuthenticationHandler).Methods("GET")
+	auth.HandleFunc("/test", web.TestHandler).Methods("GET")
 
 	return router
 }
@@ -33,7 +34,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 func authenticationMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.Header.Get("Authorization") == "" {
-			http.Error(writer, http.StatusText(401), 401)
+			http.Error(writer, `{ "message: Unauthorized" }`, http.StatusUnauthorized)
 			return
 		}
 		next.ServeHTTP(writer, request)

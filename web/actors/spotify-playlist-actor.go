@@ -24,7 +24,7 @@ func CreatePlaylist(playlist models.SpotifyPlaylist, user models.SpotifyUser, oa
 			"Authorization": "Bearer " + oauthToken,
 		},
 		Body: ioutil.NopCloser(bytes.NewReader(playlistBytes)),
-		Path: spotifyBaseAddress + strings.Replace(playlistCreatePath, "~", user.ID, 1),
+		Path: SpotifyBaseAddress + strings.Replace(playlistCreatePath, "~", user.ID, 1),
 	})
 
 	if err != nil {
@@ -47,7 +47,7 @@ func AppendTracksToPlaylist(playlist models.SpotifyPlaylist, tracks models.Recom
 		Headers: map[string]string{
 			"Authorization": "Bearer " + oauthToken,
 		},
-		Path: spotifyBaseAddress + strings.Replace(playlistAppendTrackPath, "~", dereferencedID, 1),
+		Path: SpotifyBaseAddress + strings.Replace(playlistAppendTrackPath, "~", dereferencedID, 1),
 		Body: ioutil.NopCloser(bytes.NewReader(trackBytes)),
 	})
 
